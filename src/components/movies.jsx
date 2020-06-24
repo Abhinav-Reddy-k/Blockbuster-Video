@@ -7,7 +7,7 @@ import { pagination } from './utils/pagination';
 class Movies extends Component {
   state = {
     movies: getMovies(),
-    pageSize: 5,
+    pageSize: 10,
     currentPage:1
   };
 
@@ -46,6 +46,9 @@ class Movies extends Component {
 
     const { pageSize , currentPage , movies} = this.state;
     const pageMovies = pagination(pageSize, currentPage, movies);
+    if (pageMovies.length === 0 && !currentPage===1) {
+      this.setState({currentPage: currentPage-1})
+    }
     return (
       <React.Fragment>
         {this.headLine()}
