@@ -1,16 +1,13 @@
 import React, { Component } from "react";
 
 class Like extends Component {
+  likes = () => {};
 
-    likes = () => {
-        
+  render() {
+    let className = "fa fa-heart";
+    if (!this.props.isLiked) {
+      className += "-o";
     }
-
-    render() {
-      let className = "fa fa-heart"
-      if (!this.props.isLiked){ 
-        className+="-o"
-      }
     return (
       <i
         className={className}
