@@ -12,7 +12,7 @@ class TableBody extends Component {
   getCellKey = (movie, column) => {
     return movie._id + (column.path || column.key);
   };
-
+  
   render() {
     const { data, columns } = this.props;
     return (

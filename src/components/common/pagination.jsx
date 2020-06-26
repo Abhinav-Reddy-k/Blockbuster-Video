@@ -9,7 +9,7 @@ const Pagination = (props) => {
   const pages = _.range(1, pagesCount + 1);
 
   return (
-    <nav>
+    <nav className="clickable">
       <ul className="pagination">
         {pages.map((page) => (
           <li

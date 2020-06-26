@@ -48,7 +48,7 @@ class Movies extends Component {
     this.setState({ sortColumn });
   };
 
-  render() {
+  getPageData = () => {
     const {
       pageSize,
       currentPage,
@@ -65,6 +65,20 @@ class Movies extends Component {
     if (pageMovies.length === 0 && currentPage !== 1) {
       this.setState({ currentPage: currentPage - 1 });
     }
+    return {pageMovies, filtered}
+  }
+
+  render() {
+    const {
+      pageSize,
+      currentPage,
+      movies,
+      currentGenre,
+      sortColumn,
+    } = this.state;
+
+    const { pageMovies, filtered } = this.getPageData();
+
     return (
       <div className="row">
         <div className="col-sm-4 col-md-3 col-lg-3">
