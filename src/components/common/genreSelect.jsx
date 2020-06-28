@@ -10,7 +10,7 @@ class Genre extends Component {
       currentGenre,
     } = this.props;
     return (
-      <ul className="list-group m-4">
+      <ul className="list-group tm">
         {items.map((item) => (
           <li
             key={item[valueProperty]}

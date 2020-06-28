@@ -15,3 +15,11 @@ code {
 .clickable {
   cursor: pointer;
 }
+
+.bm {
+  margin-bottom: 2rem;
+}
+
+.tm {
+  margin-top: 5rem;
+}
