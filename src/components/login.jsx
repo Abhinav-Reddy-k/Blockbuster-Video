@@ -1,45 +1,33 @@
-import React, { Component } from "react";
-import Input from "./common/inputLogin";
+import React from "react";
+import Forms from "./common/forms";
 
-class LoginForm extends Component {
+const Joi = require("@hapi/joi");
+
+class LoginForm extends Forms {
   state = {
-    account: { username: "", password: "" },
+    data: { username: "", password: "" },
+    errors: {},
   };
 
-  handleChange = ({ currentTarget: input }) => {
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account });
-  };
+  schema = Joi.object({
+    username: Joi.string().required().min(3).alphanum().label("Username"),
+    password: Joi.string().required().min(3).label("Password")
+  }).options({ abortEarly: false });
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+  doSubmit = () => {
+    console.log("Submitted");
   };
 
   render() {
-    const { account } = this.state;
-
     return (
-      <div className="col-6 container">
-        <h1 className="bm">Login Page</h1>
-        <form onSubmit={this.handleSubmit}>
-          <Input
-            name="username"
-            value={account.username}
-            onChange={this.handleChange}
-            label="Username"
-          />
-          <Input
-            name="password"
-            value={account.password}
-            onChange={this.handleChange}
-            label="Password"
-          />
-          <button type="submit" className="btn btn-primary">
-            Login
-          </button>
-        </form>
-      </div>
+        <div className="col-6 container">
+          <h1 className="bm">Login Page</h1>
+          <form onSubmit={this.handleSubmit}>
+            {this.renderInput("username","Username")}
+            {this.renderInput("password","Password",'password')}
+            {this.renderButton("Login")}
+          </form>
+        </div>
     );
   }
 }
