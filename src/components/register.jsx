@@ -14,7 +14,8 @@ class Register extends Forms {
     password: Joi.string().required().min(5).label("Password"),
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-      .required().label("Email"),
+      .required()
+      .label("Email"),
   }).options({ abortEarly: false });
 
   doSubmit = () => {

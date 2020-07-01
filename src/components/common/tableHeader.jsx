@@ -13,11 +13,12 @@ class TableHeader extends Component {
   };
 
   getHeaderIcon = (column) => {
-    const {sortColumn} = this.props;
+    const { sortColumn } = this.props;
     if (column.path !== sortColumn.path) return null;
-    if (sortColumn.order === 'asc') return <i className="fa fa-sort-asc m-2"></i>;
-    else return <i className="fa fa-sort-desc m-2"></i>
-  }
+    if (sortColumn.order === "asc")
+      return <i className="fa fa-sort-asc m-2"></i>;
+    else return <i className="fa fa-sort-desc m-2"></i>;
+  };
 
   render() {
     return (

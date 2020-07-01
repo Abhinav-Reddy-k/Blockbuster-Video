@@ -11,7 +11,7 @@ class LoginForm extends Forms {
 
   schema = Joi.object({
     username: Joi.string().required().min(3).alphanum().label("Username"),
-    password: Joi.string().required().min(3).label("Password")
+    password: Joi.string().required().min(3).label("Password"),
   }).options({ abortEarly: false });
 
   doSubmit = () => {
@@ -20,14 +20,14 @@ class LoginForm extends Forms {
 
   render() {
     return (
-        <div className="col-6 container">
-          <h1 className="bm">Login Page</h1>
-          <form onSubmit={this.handleSubmit}>
-            {this.renderInput("username","Username")}
-            {this.renderInput("password","Password",'password')}
-            {this.renderButton("Login")}
-          </form>
-        </div>
+      <div className="col-6 container">
+        <h1 className="bm">Login Page</h1>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password", "password")}
+          {this.renderButton("Login")}
+        </form>
+      </div>
     );
   }
 }

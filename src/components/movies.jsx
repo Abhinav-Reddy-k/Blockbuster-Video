@@ -65,8 +65,8 @@ class Movies extends Component {
     if (pageMovies.length === 0 && currentPage !== 1) {
       this.setState({ currentPage: currentPage - 1 });
     }
-    return {pageMovies, filtered}
-  }
+    return { pageMovies, filtered };
+  };
 
   render() {
     const {

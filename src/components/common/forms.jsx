@@ -7,8 +7,6 @@ class Forms extends Component {
     errors: {},
   };
 
-  
-
   validate = () => {
     const { data } = this.state;
     const errors = {};
@@ -43,8 +41,6 @@ class Forms extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const errors = this.validate();
-    this.setState({ errors });
     this.doSubmit();
   };
 
