@@ -5,8 +5,9 @@ import { pagination } from "./utils/paginationFunc";
 import { getGenres } from "./../services/fakeGenreService";
 import Genre from "./common/genreSelect";
 import MoviesTable from "./moviesTable";
-import _ from "lodash";
+import _, { startsWith } from "lodash";
 import { Link } from "react-router-dom";
+import Search from "./common/serach";
 
 class Movies extends Component {
   state = {
@@ -15,6 +16,7 @@ class Movies extends Component {
     pageSize: 5,
     currentPage: 1,
     currentGenre: "All Genres",
+    searchValue: "",
     sortColumn: { path: "title", order: "asc" },
   };
 
@@ -41,12 +43,17 @@ class Movies extends Component {
   };
 
   handleGenreSelect = (genre) => {
+    if (this.searchValue) this.setState({currentGenre: "All Genre"});
     this.setState({ currentGenre: genre });
     this.setState({ currentPage: 1 });
   };
 
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
+  };
+
+  handleSearch = (searchValue) => {
+    this.setState({ searchValue, currentPage:1, currentGenre:"All Genres" });
   };
 
   getPageData = () => {
@@ -56,11 +63,18 @@ class Movies extends Component {
       movies,
       currentGenre,
       sortColumn,
+      searchValue,
     } = this.state;
-    const filtered =
-      currentGenre && currentGenre !== "All Genres"
-        ? movies.filter((movie) => movie.genre.name === currentGenre)
-        : movies;
+    let filtered;
+    if (searchValue)
+      filtered = movies.filter((m) =>
+        m.title.toLowerCase().startsWith(searchValue.toLowerCase())
+      );
+    else
+      filtered =
+        currentGenre && currentGenre !== "All Genres"
+          ? movies.filter((movie) => movie.genre.name === currentGenre)
+          : movies;
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const pageMovies = pagination(pageSize, currentPage, sorted);
     if (pageMovies.length === 0 && currentPage !== 1) {
@@ -76,6 +90,7 @@ class Movies extends Component {
       movies,
       currentGenre,
       sortColumn,
+      searchValue,
     } = this.state;
 
     const { pageMovies, filtered } = this.getPageData();
@@ -93,9 +108,10 @@ class Movies extends Component {
           <p className="m-4 lead">
             Showing {filtered.length} movies available in the database ....
           </p>
-          <Link to="/movies/new" className="btn btn-primary btn-sm bm">
+          <Link to="/movies/new" className="btn btn-primary btn-sm">
             New Movie
           </Link>
+          <Search value={searchValue} onChange={this.handleSearch} />
           <MoviesTable
             onLike={this.handleLike}
             onDelete={this.handleDelete}
