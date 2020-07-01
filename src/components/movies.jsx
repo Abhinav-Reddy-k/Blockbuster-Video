@@ -5,7 +5,7 @@ import { pagination } from "./utils/paginationFunc";
 import { getGenres } from "./../services/fakeGenreService";
 import Genre from "./common/genreSelect";
 import MoviesTable from "./moviesTable";
-import _, { startsWith } from "lodash";
+import _ from "lodash";
 import { Link } from "react-router-dom";
 import Search from "./common/serach";
 
@@ -13,7 +13,7 @@ class Movies extends Component {
   state = {
     movies: [],
     genres: [],
-    pageSize: 5,
+    pageSize: 8,
     currentPage: 1,
     currentGenre: "All Genres",
     searchValue: "",
@@ -44,7 +44,7 @@ class Movies extends Component {
 
   handleGenreSelect = (genre) => {
     if (this.searchValue) this.setState({currentGenre: "All Genre"});
-    this.setState({ currentGenre: genre });
+    this.setState({ currentGenre: genre, searchValue:"" });
     this.setState({ currentPage: 1 });
   };
 
