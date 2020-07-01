@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Input from "./inputLogin";
+import Select from './select';
 
 class Forms extends Component {
   state = {
@@ -55,6 +56,20 @@ class Forms extends Component {
       </button>
     );
   };
+
+  renderSelect = (name, label, options) => {
+    const { data, errors } = this.state;
+    return (
+      <Select
+        options={options}
+        name={name}
+        value={data[name]}
+        onChange={this.handleChange}
+        label={label}
+        error={errors[name]}
+      />
+    );
+  }
 
   renderInput = (name, label, type = "text") => {
     const { data, errors } = this.state;

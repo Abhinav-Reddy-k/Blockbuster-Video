@@ -6,6 +6,7 @@ import { getGenres } from "./../services/fakeGenreService";
 import Genre from "./common/genreSelect";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 
 class Movies extends Component {
   state = {
@@ -92,6 +93,9 @@ class Movies extends Component {
           <p className="m-4 lead">
             Showing {filtered.length} movies available in the database ....
           </p>
+          <Link to="/movies/new" className="btn btn-primary btn-sm bm">
+            New Movie
+          </Link>
           <MoviesTable
             onLike={this.handleLike}
             onDelete={this.handleDelete}
