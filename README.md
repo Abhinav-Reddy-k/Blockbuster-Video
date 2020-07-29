@@ -1,3 +1,8 @@
+## Remembering the Glory Days of the Video Rental Store
+
+## Blockbuster Video Project
+##### This is a video rental frontend app made with React.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
