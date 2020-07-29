@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { getMovies } from "./../services/fakeMovieService";
+import { getMovies, deleteMovie } from "./../services/movieService";
 import Pagination from "./common/pagination";
 import { pagination } from "./utils/paginationFunc";
-import { getGenres } from "./../services/fakeGenreService";
+import { getGenres } from "./../services/genreService";
 import Genre from "./common/genreSelect";
 import MoviesTable from "./moviesTable";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import Search from "./common/serach";
+import { toast } from "react-toastify";
 
 class Movies extends Component {
   state = {
@@ -20,14 +21,25 @@ class Movies extends Component {
     sortColumn: { path: "title", order: "asc" },
   };
 
-  componentDidMount() {
-    const genres = [{ name: "All Genres", _id: "none" }, ...getGenres()];
-    this.setState({ movies: getMovies(), genres });
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const { data: movies } = await getMovies();
+    const genres = [{ name: "All Genres", _id: "none" }, ...data];
+    this.setState({ movies, genres });
   }
 
-  handleDelete = (movie) => {
-    let movies = this.state.movies.filter((m) => m._id !== movie._id);
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
+    let movies = originalMovies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status > 400 && ex.response.status < 500) {
+        toast.error("The movie is already deleted");
+      }
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handleLike = (movie) => {
@@ -43,8 +55,8 @@ class Movies extends Component {
   };
 
   handleGenreSelect = (genre) => {
-    if (this.searchValue) this.setState({currentGenre: "All Genre"});
-    this.setState({ currentGenre: genre, searchValue:"" });
+    if (this.searchValue) this.setState({ currentGenre: "All Genre" });
+    this.setState({ currentGenre: genre, searchValue: "" });
     this.setState({ currentPage: 1 });
   };
 
@@ -53,7 +65,7 @@ class Movies extends Component {
   };
 
   handleSearch = (searchValue) => {
-    this.setState({ searchValue, currentPage:1, currentGenre:"All Genres" });
+    this.setState({ searchValue, currentPage: 1, currentGenre: "All Genres" });
   };
 
   getPageData = () => {
