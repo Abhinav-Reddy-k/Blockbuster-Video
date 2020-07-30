@@ -1,6 +1,9 @@
-import axios from "axios";
+import http from "./httpService";
 import { apiUrl } from "../config.json";
 
 export function getGenres() {
-  return axios.get(`${apiUrl}/genres`);
+  return http.request({
+    url: `/genres`,
+    baseURL: apiUrl,
+  });
 }
