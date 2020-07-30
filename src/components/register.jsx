@@ -1,5 +1,7 @@
 import React from "react";
 import Forms from "./common/forms";
+import { register } from "./../services/userService";
+import { toast } from "react-toastify";
 
 const Joi = require("@hapi/joi");
 
@@ -10,7 +12,7 @@ class Register extends Forms {
   };
 
   schema = Joi.object({
-    username: Joi.string().required().min(3).alphanum().label("Username"),
+    username: Joi.string().required().min(3).label("Username"),
     password: Joi.string().required().min(5).label("Password"),
     email: Joi.string()
       .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
@@ -18,8 +20,18 @@ class Register extends Forms {
       .label("Email"),
   }).options({ abortEarly: false });
 
-  doSubmit = () => {
-    console.log("Submitted");
+  doSubmit = async () => {
+    try {
+      await register(this.state.data);
+      toast.success(`Successfully added ${this.state.data.username}`);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 400) {
+        toast.error("User Already Registered");
+        const errors = { ...this.state.errors };
+        errors.username = ex.response.data;
+        this.setState({ errors });
+      }
+    }
   };
 
   render() {
