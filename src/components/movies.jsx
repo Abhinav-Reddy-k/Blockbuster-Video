@@ -1,14 +1,16 @@
-import React, { Component } from "react";
-import { getMovies, deleteMovie } from "./../services/movieService";
-import Pagination from "./common/pagination";
-import { pagination } from "./utils/paginationFunc";
-import { getGenres } from "./../services/genreService";
-import Genre from "./common/genreSelect";
-import MoviesTable from "./moviesTable";
 import _ from "lodash";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Search from "./common/serach";
 import { toast } from "react-toastify";
+
+import { getCurrentUser } from "./../services/authService";
+import { getGenres } from "./../services/genreService";
+import { deleteMovie, getMovies } from "./../services/movieService";
+import Genre from "./common/genreSelect";
+import Pagination from "./common/pagination";
+import Search from "./common/serach";
+import MoviesTable from "./moviesTable";
+import { pagination } from "./utils/paginationFunc";
 
 class Movies extends Component {
   state = {
@@ -34,6 +36,7 @@ class Movies extends Component {
     this.setState({ movies });
     try {
       await deleteMovie(movie._id);
+      toast.info("Movie Deleted Successfully");
     } catch (ex) {
       if (ex.response && ex.response.status > 400 && ex.response.status < 500) {
         toast.error("The movie is already deleted");
@@ -104,7 +107,7 @@ class Movies extends Component {
       sortColumn,
       searchValue,
     } = this.state;
-
+    const user = getCurrentUser();
     const { pageMovies, filtered } = this.getPageData();
 
     return (
@@ -120,9 +123,11 @@ class Movies extends Component {
           <p className="m-4 lead">
             Showing {filtered.length} movies available in the database ....
           </p>
-          <Link to="/movies/new" className="btn btn-primary btn-sm">
-            New Movie
-          </Link>
+          {user && user.isAdmin && (
+            <Link to="/movies/new" className="btn btn-primary btn-sm">
+              New Movie
+            </Link>
+          )}
           <Search value={searchValue} onChange={this.handleSearch} />
           <MoviesTable
             onLike={this.handleLike}

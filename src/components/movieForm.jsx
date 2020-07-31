@@ -1,8 +1,10 @@
 import React from "react";
+import { toast } from "react-toastify";
+
+import { getGenres } from "../services/genreService";
+import { getCurrentUser } from "./../services/authService";
 import { getMovie, saveMovie } from "./../services/movieService";
 import Forms from "./common/forms";
-import { getGenres } from "../services/genreService";
-import { toast } from "react-toastify";
 
 const Joi = require("@hapi/joi");
 
@@ -65,9 +67,11 @@ class MovieForm extends Forms {
   };
 
   doSubmit = async () => {
-    console.log("Submitted");
-    await saveMovie(this.state.data);
-    toast.success("Movie Saved Succesfully");
+    const user = getCurrentUser();
+    if (user && user.isAdmin) {
+      await saveMovie(this.state.data);
+      toast.success("Movie Saved Succesfully");
+    } else toast.error("You cannot save a movie");
     this.props.history.push("/movies");
   };
 
