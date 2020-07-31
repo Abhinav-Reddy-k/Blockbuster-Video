@@ -1,5 +1,7 @@
 ## Remembering the Glory Days of the Video Rental Store
 
+### Since Backend is not uploaded... Checkout to Front-End dev branch to run the app locally..
+
 ## Blockbuster Video Project
 ##### This is a video rental frontend app made with React.
 
