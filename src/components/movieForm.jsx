@@ -1,14 +1,17 @@
 import React from "react";
-import { getMovie, saveMovie } from "./../services/fakeMovieService";
+import { toast } from "react-toastify";
+
+import { getGenres } from "../services/genreService";
+import { getCurrentUser } from "./../services/authService";
+import { getMovie, saveMovie } from "./../services/movieService";
 import Forms from "./common/forms";
-import { getGenres } from "../services/fakeGenreService";
 
 const Joi = require("@hapi/joi");
 
 class MovieForm extends Forms {
   state = {
     data: {
-      _id: "id",
+      _id: "new",
       title: "",
       genreId: "",
       numberInStock: "",
@@ -30,17 +33,27 @@ class MovieForm extends Forms {
     dailyRentalRate: Joi.number().max(10).min(0).label("Rate").required(),
   }).options({ abortEarly: false });
 
-  componentDidMount() {
-    const genres = getGenres();
+  async populateGenres() {
+    let { data: genres } = await getGenres();
+    console.log(genres);
     this.setState({ genres });
+  }
 
-    const movieId = this.props.match.params.id;
-    if (movieId === "new") return;
+  async populateMovies() {
+    try {
+      const movieId = this.props.match.params.id;
+      if (movieId === "new") return;
+      const { data: movie } = await getMovie(movieId);
+      this.setState({ data: this.mapToData(movie) });
+    } catch (error) {
+      if (error.response && error.response.status === 404)
+        return this.props.history.replace("/pageNotFound");
+    }
+  }
 
-    const movie = getMovie(movieId);
-    if (!movie) return this.props.history.replace("/pageNotFound");
-
-    this.setState({ data: this.mapToData(movie) });
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovies();
   }
 
   mapToData = (movie) => {
@@ -53,9 +66,12 @@ class MovieForm extends Forms {
     };
   };
 
-  doSubmit = () => {
-    console.log("Submitted");
-    saveMovie(this.state.data);
+  doSubmit = async () => {
+    const user = getCurrentUser();
+    if (user && user.isAdmin) {
+      await saveMovie(this.state.data);
+      toast.success("Movie Saved Succesfully");
+    } else toast.error("You cannot save a movie");
     this.props.history.push("/movies");
   };
 
